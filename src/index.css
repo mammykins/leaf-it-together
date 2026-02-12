@@ -1,0 +1,304 @@
+:root {
+  --color-bg: #f5f0e8;
+  --color-bg-warm: #ebe4d4;
+  --color-bench: #c4a882;
+  --color-bench-dark: #8b7355;
+  --color-text: #3d2e1f;
+  --color-text-light: #7a6652;
+  --color-accent: #b85c38;
+  --color-accent-hover: #d4714a;
+  --color-success: #5a8a5e;
+  --color-ghost: rgba(120, 100, 80, 0.12);
+  --font-display: 'Caveat', cursive;
+  --font-body: 'Source Serif 4', Georgia, serif;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-text);
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  touch-action: none;
+}
+
+/* Subtle paper texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='4' height='4'%3E%3Crect width='4' height='4' fill='%23000'/%3E%3Crect width='1' height='1' fill='%23fff'/%3E%3C/svg%3E");
+}
+
+button {
+  font-family: var(--font-display);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+.screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-primary {
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 1.5rem;
+  font-weight: 600;
+  padding: 0.75rem 2.5rem;
+  border-radius: 2rem;
+  letter-spacing: 0.02em;
+  box-shadow: 0 4px 12px rgba(184, 92, 56, 0.3);
+}
+
+.btn-primary:hover {
+  background: var(--color-accent-hover);
+  box-shadow: 0 6px 20px rgba(184, 92, 56, 0.4);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--color-text-light);
+  font-size: 1.1rem;
+  padding: 0.5rem 1.5rem;
+  border-radius: 1.5rem;
+  border: 2px solid var(--color-bench);
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.species-label {
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--color-text);
+  text-align: center;
+  line-height: 1.2;
+}
+
+.species-scientific {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--color-text-light);
+  font-weight: 300;
+}
+
+/* Leaf card grid */
+.leaf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+  max-width: 640px;
+  width: 100%;
+  padding: 0 1rem;
+}
+
+.leaf-card {
+  background: var(--color-bg);
+  border: 2px solid var(--color-bench);
+  border-radius: 1rem;
+  padding: 1rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.leaf-card:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.leaf-card.selected {
+  border-color: var(--color-accent);
+  background: rgba(184, 92, 56, 0.06);
+  box-shadow: 0 0 0 3px rgba(184, 92, 56, 0.15);
+}
+
+.leaf-card canvas {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+}
+
+.leaf-card-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  color: var(--color-text);
+}
+
+.difficulty-stars {
+  color: var(--color-accent);
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+  letter-spacing: 2px;
+}
+
+/* Difficulty selector */
+.difficulty-selector {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1.5rem 0;
+}
+
+.difficulty-btn {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 1.5rem;
+  background: var(--color-bg);
+  color: var(--color-text-light);
+  border: 2px solid var(--color-bench);
+}
+
+.difficulty-btn.active {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
+}
+
+/* Puzzle HUD */
+.puzzle-hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background: var(--color-bg-warm);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.hud-left, .hud-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.hud-center {
+  text-align: center;
+}
+
+.timer {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--color-text-light);
+  min-width: 60px;
+}
+
+.piece-counter {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--color-text-light);
+}
+
+/* Puzzle canvas container */
+.puzzle-container {
+  flex: 1;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  background: var(--color-bg-warm);
+}
+
+.puzzle-container canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Controls hint bar */
+.controls-hint {
+  padding: 0.35rem 1rem;
+  background: var(--color-bg);
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--color-text-light);
+  font-style: italic;
+}
+
+/* Victory overlay */
+.victory-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(245, 240, 232, 0.92);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.6s ease;
+  z-index: 100;
+}
+
+.victory-title {
+  font-family: var(--font-display);
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--color-success);
+  margin-bottom: 0.5rem;
+}
+
+.fun-fact {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--color-text-light);
+  max-width: 400px;
+  text-align: center;
+  line-height: 1.6;
+  margin: 1rem 0 2rem;
+}
+
+.victory-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .species-label { font-size: 1.4rem; }
+  .leaf-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+  .leaf-card canvas { width: 70px; height: 70px; }
+  .puzzle-hud { padding: 0.4rem 0.5rem; }
+  .victory-title { font-size: 2.2rem; }
+}
