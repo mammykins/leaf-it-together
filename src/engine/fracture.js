@@ -136,9 +136,10 @@ export function generateFragments(outline, difficulty = 'medium', seed) {
  * @param {number} canvasWidth
  * @param {number} canvasHeight
  * @param {{x: number, y: number}} leafCenter - Center of the assembled leaf on canvas
+ * @param {number} scale - Scale factor for fragment coordinates
  */
-export function scatterFragments(fragments, canvasWidth, canvasHeight, leafCenter) {
-  const margin = 40;
+export function scatterFragments(fragments, canvasWidth, canvasHeight, leafCenter, scale = 1) {
+  const padding = 15; // Extra padding from canvas edge
   const avoidRadius = 120; // Keep fragments away from leaf center initially
 
   for (let i = 0; i < fragments.length; i++) {
@@ -146,10 +147,21 @@ export function scatterFragments(fragments, canvasWidth, canvasHeight, leafCente
     let x, y;
     let attempts = 0;
 
+    // Calculate fragment bounds in canvas space
+    const bounds = polygonBounds(frag.polygon);
+    const halfW = ((bounds.maxX - bounds.minX) / 2) * scale;
+    const halfH = ((bounds.maxY - bounds.minY) / 2) * scale;
+
+    // Compute valid scatter range ensuring entire fragment stays visible
+    const minX = halfW + padding;
+    const maxX = canvasWidth - halfW - padding;
+    const minY = halfH + padding;
+    const maxY = canvasHeight - halfH - padding;
+
     // Find a position that's not too close to the center
     do {
-      x = margin + Math.random() * (canvasWidth - margin * 2);
-      y = margin + Math.random() * (canvasHeight - margin * 2);
+      x = minX + Math.random() * Math.max(0, maxX - minX);
+      y = minY + Math.random() * Math.max(0, maxY - minY);
       attempts++;
     } while (
       attempts < 50 &&

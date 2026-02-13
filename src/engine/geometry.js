@@ -197,22 +197,19 @@ export function lloydRelax(seeds, polygon, iterations = 2) {
 /**
  * Compute Voronoi cells for seeds clipped to a bounding polygon.
  * Uses half-plane intersection method.
+ *
+ * Starts from the leaf polygon directly (rather than a bounding box),
+ * then clips by each bisector half-plane. This avoids Sutherland-Hodgman
+ * clipping against the (non-convex) leaf outline, which would discard
+ * cells that fall inside concavities.
  */
 export function computeVoronoiCells(seeds, polygon) {
-  const bounds = polygonBounds(polygon);
-  const pad = Math.max(bounds.maxX - bounds.minX, bounds.maxY - bounds.minY) * 0.5;
-  // Large bounding box
-  const bigBox = [
-    { x: bounds.minX - pad, y: bounds.minY - pad },
-    { x: bounds.maxX + pad, y: bounds.minY - pad },
-    { x: bounds.maxX + pad, y: bounds.maxY + pad },
-    { x: bounds.minX - pad, y: bounds.maxY + pad },
-  ];
-
   const cells = [];
 
   for (let i = 0; i < seeds.length; i++) {
-    let cell = [...bigBox];
+    // Start with the full leaf outline — a half-plane clip on an
+    // arbitrary polygon is always geometrically valid.
+    let cell = [...polygon];
 
     for (let j = 0; j < seeds.length; j++) {
       if (i === j) continue;
@@ -232,11 +229,6 @@ export function computeVoronoiCells(seeds, polygon) {
       const lineB = { x: mid.x + dy, y: mid.y - dx };
 
       cell = clipPolygonByLine(cell, lineA, lineB);
-    }
-
-    // Now clip the Voronoi cell to the leaf polygon
-    if (cell.length >= 3) {
-      cell = clipPolygon(cell, polygon);
     }
 
     cells.push(cell.length >= 3 ? cell : []);

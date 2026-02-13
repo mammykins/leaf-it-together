@@ -73,7 +73,7 @@ export default function PuzzleCanvas({
     const fragments = generateFragments(outline, difficulty, puzzleSeed);
 
     // Scatter fragments around the canvas
-    scatterFragments(fragments, cw, ch, leafOrigin);
+    scatterFragments(fragments, cw, ch, leafOrigin, scale);
 
     fragmentsRef.current = fragments;
     setTotalFragments(fragments.length);
